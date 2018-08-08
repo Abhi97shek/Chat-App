@@ -13,26 +13,27 @@ io.on("connection",(socket)=>
 {
   console.log("new User connected");
   socket.emit('newMessage',{
-    from:"Abhishek",
-    text:"Hi its look easy",
-    createAt:123
+    from:"Admin",
+    text:"Welcome to the chat App",
+    createAt:new Date().getTime()
   });
-  socket.on('createMessage',(createMessage)=>
+  socket.broadcast.emit('newMessage',{
+    from:"Admin",
+    text:"User Conneted",
+    createAt:new Date().getTime()
+  });
+
+  socket.on('createMessage',(message,callback)=>
 {
-  console.log("Message recived");
-  console.log(`From:${createMessage.from}`);
-  console.log(`text:${createMessage.text}`);
+  console.log("Message recived",message);
+  io.emit('newMessage',{
+    from:message.from,
+    text:message.text,
+    createAt:new Date().getTime()
+  });
+  callback("This is from the server");
 });
-  // socket.emit("newEmail",{
-  //   from:"abhi.kumar736@gmail.com",
-  //   text:"Hi Hows You?",
-  //   createdAt:123
-  //
-  // });
-  // socket.on("createEmail",(email)=>
-  // {
-  //   console.log("New Email",email);
-  // });
+
   socket.on('disconnect',()=>
 {
   console.log("User disconnect");
